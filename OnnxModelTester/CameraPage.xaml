@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             x:Class="OnnxModelTester.CameraPage">
+
+    <ScrollView>
+        <VerticalStackLayout 
+        VerticalOptions="Fill"
+        HorizontalOptions="Fill">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Text="Start Capturing" Grid.Row="0" Grid.Column="0" Clicked="StartCapturing"/>
+                <Button Text="Stop Capturing" Grid.Row="0" Grid.Column="2" Clicked="StopCapturing"/>
+            </Grid>
+
+
+            <Image x:Name="myImage" WidthRequest="300" HeightRequest="600" />
+            
+            <cv:CameraView x:Name="cameraView" WidthRequest="300" HeightRequest="600" 
+                       CamerasLoaded="cameraView_CamerasLoaded"/>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+
+
+</ContentPage>

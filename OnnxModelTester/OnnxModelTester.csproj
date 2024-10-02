@@ -59,10 +59,12 @@
 
 	<ItemGroup>
 	  <None Remove="model_rtformer1.onnx" />
+	  <None Remove="Resources\Raw\mobilenetv2-12.onnx" />
+	  <None Remove="Resources\Raw\Ultraface_version-RFB-320.onnx" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="model_rtformer1.onnx" />
+	  <EmbeddedResource Include="Resources\Raw\model_rtformer1.onnx" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -73,6 +75,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.19.2" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
 		<PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
 	</ItemGroup>
 

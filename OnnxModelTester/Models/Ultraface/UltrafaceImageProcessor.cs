@@ -4,8 +4,9 @@
 using System;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SkiaSharp;
+using OnnxModelTester.PrePostProcessing;
 
-namespace OnnxModelTester
+namespace OnnxModelTester.Models.Ultraface
 {
     public class UltrafaceImageProcessor : SkiaSharpImageProcessor<UltrafacePrediction, float>
     {

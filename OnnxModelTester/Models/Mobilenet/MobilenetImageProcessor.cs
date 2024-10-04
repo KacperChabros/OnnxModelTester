@@ -4,8 +4,9 @@
 using System;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SkiaSharp;
+using OnnxModelTester.PrePostProcessing;
 
-namespace OnnxModelTester
+namespace OnnxModelTester.Models.Mobilenet
 {
     public class MobilenetImageProcessor : SkiaSharpImageProcessor<MobilenetPrediction, float>
     {

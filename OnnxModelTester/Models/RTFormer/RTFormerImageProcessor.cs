@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OnnxModelTester.PrePostProcessing;
 
 namespace OnnxModelTester.Models.RTFormer
 {
@@ -56,9 +57,16 @@ namespace OnnxModelTester.Models.RTFormer
                                           new[] { 1, 3, RequiredHeight, RequiredWidth });
         }
 
-        protected override void OnApplyMaskPrediction(RTFormerPrediction prediction, SKCanvas canvas)
+        protected override void OnApplyMaskPrediction(RTFormerPrediction prediction, SKCanvas canvas, int orgImgWidth, int orgImgHeight)
         {
+            // Create RGBA bitmap in original size
+            var rgbaPixels = prediction.Mask;
+            SKBitmap bitmap = new SKBitmap(512, 1024, SKColorType.Rgba8888, SKAlphaType.Premul);
+            IntPtr pixelPointer = bitmap.GetPixels();
+            System.Runtime.InteropServices.Marshal.Copy(rgbaPixels, 0, pixelPointer, rgbaPixels.Length);
+            SKRect destRect = new SKRect(0, 0, orgImgWidth, orgImgHeight);
 
+            canvas.DrawBitmap(bitmap, destRect);
         }
     }
 }

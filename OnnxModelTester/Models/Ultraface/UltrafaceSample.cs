@@ -6,8 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using OnnxModelTester.PrePostProcessing;
 
-namespace OnnxModelTester
+namespace OnnxModelTester.Models.Ultraface
 {
     // See: https://github.com/onnx/models/tree/master/vision/body_analysis/ultraface#model
     // Model download: https://github.com/onnx/models/blob/master/vision/body_analysis/ultraface/models/version-RFB-320.onnx
@@ -17,7 +18,7 @@ namespace OnnxModelTester
         public const string ModelFilename = "Ultraface_version-RFB-320.onnx";
 
         public UltrafaceSample()
-            : base(Identifier, ModelFilename) {}
+            : base(Identifier, ModelFilename) { }
 
         protected override async Task<ImageProcessingResult> OnProcessImageAsync(byte[] image)
         {
@@ -82,22 +83,22 @@ namespace OnnxModelTester
             }
 
             // find the best score
-            float highestScore = scores.Max(); 
+            float highestScore = scores.Max();
             var indexForHighestScore = scores.IndexOf(highestScore);
             var boxOffset = indexForHighestScore * 4;
 
-            return new List<UltrafacePrediction> 
-                   { 
-                        new UltrafacePrediction
-                        {
-                            Confidence = scores[indexForHighestScore],
-                            Box = new PredictionBox(
-                                boxes[boxOffset + 0] * sourceImageWidth,
-                                boxes[boxOffset + 1] * sourceImageHeight,
-                                boxes[boxOffset + 2] * sourceImageWidth,
-                                boxes[boxOffset + 3] * sourceImageHeight)
-                        }
-                   };
+            return new List<UltrafacePrediction>
+               {
+                    new UltrafacePrediction
+                    {
+                        Confidence = scores[indexForHighestScore],
+                        Box = new PredictionBox(
+                            boxes[boxOffset + 0] * sourceImageWidth,
+                            boxes[boxOffset + 1] * sourceImageHeight,
+                            boxes[boxOffset + 2] * sourceImageWidth,
+                            boxes[boxOffset + 3] * sourceImageHeight)
+                    }
+               };
         }
     }
 }

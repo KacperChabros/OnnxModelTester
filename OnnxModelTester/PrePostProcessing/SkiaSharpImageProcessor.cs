@@ -9,7 +9,7 @@ using OnnxModelTester.Models.RTFormer;
 using SkiaSharp;
 using static Android.Icu.Text.ListFormatter;
 
-namespace OnnxModelTester
+namespace OnnxModelTester.PrePostProcessing
 {
     public class SkiaSharpImageProcessor<TPrediction, TTensor> : IImageProcessor<SKBitmap, TPrediction, TTensor>
     {
@@ -17,7 +17,7 @@ namespace OnnxModelTester
         protected virtual Tensor<TTensor> OnGetTensorForImage(SKBitmap image) => throw new NotImplementedException();
         protected virtual void OnPrepareToApplyPredictions(SKBitmap image, SKCanvas canvas) { }
         protected virtual void OnApplyPrediction(TPrediction prediction, SKPaint textPaint, SKPaint rectPaint, SKCanvas canvas) { }
-        protected virtual void OnApplyMaskPrediction(TPrediction prediction, SKCanvas canvas) { }
+        protected virtual void OnApplyMaskPrediction(TPrediction prediction, SKCanvas canvas, int orgImgWidth, int orgImgHeight) { }
 
         public byte[] ApplyPredictionsToImage(IList<TPrediction> predictions, SKBitmap image)
         {
@@ -37,17 +37,11 @@ namespace OnnxModelTester
 
             OnPrepareToApplyPredictions(image, canvas);
 
-            if(predictions is IList<RTFormerPrediction> rtFormerPreds)
+            if(predictions is IList<RTFormerPrediction>)
             {
-                foreach (var prediction in rtFormerPreds)
+                foreach (var prediction in predictions)
                 {
-                    SKBitmap bitmap = new SKBitmap(image.Width, image.Height, SKColorType.Gray8, SKAlphaType.Opaque);
-                    GCHandle handle = GCHandle.Alloc(prediction.Mask, GCHandleType.Pinned);
-                    IntPtr pointer = handle.AddrOfPinnedObject();
-                    bitmap.InstallPixels(bitmap.Info, pointer, image.Width);
-                    handle.Free();
-                    canvas.DrawBitmap(bitmap, new SKRect(0, 0, 1024, 512));
-                    //OnApplyMaskPrediction(prediction, canvas);
+                    OnApplyMaskPrediction(prediction, canvas, image.Width, image.Height);
                 }
             }
             else

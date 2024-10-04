@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using AndroidX.ConstraintLayout.Core.Motion.Utils;
 using Microsoft.ML.OnnxRuntime;
+using OnnxModelTester.PrePostProcessing;
 
 namespace OnnxModelTester
 {

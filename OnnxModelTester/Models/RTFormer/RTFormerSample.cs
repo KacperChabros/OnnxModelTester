@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
+using OnnxModelTester.PrePostProcessing;
 
 namespace OnnxModelTester.Models.RTFormer
 {
@@ -21,13 +22,13 @@ namespace OnnxModelTester.Models.RTFormer
         {
             // do initial resize maintaining the aspect ratio so the smallest size is 800. this is arbitrary and 
             // chosen to be a good size to dispay to the user with the results
-            using var sourceImage = await Task.Run(() => ImageProcessor.GetImageFromBytes(image, 800f))
+            using var sourceImage = await Task.Run(() => ImageProcessor.GetImageFromBytes(image, 800f))//check if necessary
                                               .ConfigureAwait(false);
 
-            // do the preprocessing to resize the image to the 320x240 with the model expects. 
+            // do the preprocessing to resize the image to the 1024x512 with the model expects. 
             // NOTE: this does not maintain the aspect ratio but works well enough with this particular model.
             //       it may be better in other scenarios to resize and crop to convert the original image to a
-            //       320x240 image.
+            //       1024x512 image.
             using var preprocessedImage = await Task.Run(() => ImageProcessor.PreprocessSourceImage(image))
                                                     .ConfigureAwait(false);
 
@@ -43,7 +44,6 @@ namespace OnnxModelTester.Models.RTFormer
             // Draw the bounding box for the best prediction on the image from the first resize. 
             var outputImage = await Task.Run(() => ImageProcessor.ApplyPredictionsToImage(predictions, sourceImage))
                                         .ConfigureAwait(false);
-            //moje
 
             return new ImageProcessingResult(outputImage);
         }
@@ -52,60 +52,43 @@ namespace OnnxModelTester.Models.RTFormer
         {
             // Setup inputs. Names used must match the input names in the model. 
             var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("x", input) };
-            //foreach (var inputMeta in Session.InputMetadata)
-            //{
-            //    Console.WriteLine($"Nazwa wejścia: {inputMeta.Key}, Typ: {inputMeta.Value.ElementType}, Shape: {string.Join(",", inputMeta.Value.Dimensions)}");
-            //}
 
             // Run inference
             using IDisposableReadOnlyCollection<DisposableNamedOnnxValue> results = Session.Run(inputs);
 
-            // Process the results. 
-            //   First result is the confidence score for each match
-            //   Second result are the values to draw a bounding box for each match
-            //
-            // Note that the correct processing is always model specific. Things like the format of the values for
-            // the bounding boxes can vary by model.
+            // Handle predictions
             var resultsArray = results.ToArray();
-            var cokolwiek = resultsArray[0];
-            var predictedValues = cokolwiek.AsEnumerable<int>().ToArray();
+            var predictedValues = resultsArray[0].AsEnumerable<int>().ToArray();
             byte[] mask = predictedValues.Select(i => (byte)i).ToArray();
+            var rgbaMask = ConvertGrayscaleToRgba(mask, RTFormerClassColorMap.ColorMap);
 
-            //float[] confidences = resultsArray[0].AsEnumerable<float>().ToArray();
-            //float[] boxes = resultsArray[1].AsEnumerable<float>().ToArray();
-
-            // Confidences are represented by 2 values - the second is for the face and the first is ignored
-            //var scores = confidences.Where((val, index) => index % 2 == 1).ToList();
-
-            // If there were no good matches we return an empty prediction
-            //if (!scores.Any(i => i < 0.5))
-            //{
-            //    return new List<UltrafacePrediction>(); ;
-            //}
-
-            //// find the best score
-            //float highestScore = scores.Max();
-            //var indexForHighestScore = scores.IndexOf(highestScore);
-            //var boxOffset = indexForHighestScore * 4;
             return new List<RTFormerPrediction>()
             {
                 new RTFormerPrediction
                 {
-                    Mask = mask
+                    Mask = rgbaMask
                 }
             };
-            //return new List<UltrafacePrediction>
-            //       {
-            //            new UltrafacePrediction
-            //            {
-            //                Confidence = scores[indexForHighestScore],
-            //                Box = new PredictionBox(
-            //                    boxes[boxOffset + 0] * sourceImageWidth,
-            //                    boxes[boxOffset + 1] * sourceImageHeight,
-            //                    boxes[boxOffset + 2] * sourceImageWidth,
-            //                    boxes[boxOffset + 3] * sourceImageHeight)
-            //            }
-            //       };
+        }
+
+        private static byte[] ConvertGrayscaleToRgba(byte[] grayscalePixels, Dictionary<byte, byte[]> grayscaleToRgba)
+        {
+            // Make 4 times larger array 
+            byte[] rgbaPixels = new byte[grayscalePixels.Length * 4];
+
+            for (int i = 0; i < grayscalePixels.Length; i++)
+            {
+                byte grayscaleValue = grayscalePixels[i];
+                byte[] rgbaValue = grayscaleToRgba[grayscaleValue];
+
+                // assign RGBA value
+                rgbaPixels[i * 4] = rgbaValue[0];     // R
+                rgbaPixels[i * 4 + 1] = rgbaValue[1]; // G
+                rgbaPixels[i * 4 + 2] = rgbaValue[2]; // B
+                rgbaPixels[i * 4 + 3] = rgbaValue[3]; // A
+            }
+
+            return rgbaPixels;
         }
     }
 }

@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.ML.OnnxRuntime.Tensors;
 
-namespace OnnxModelTester
+namespace OnnxModelTester.PrePostProcessing
 {
     public interface IImageProcessor<TImage, TPrediction, TTensor>
     {

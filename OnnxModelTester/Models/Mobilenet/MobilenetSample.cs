@@ -4,8 +4,9 @@
 using System.Text;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using OnnxModelTester.PrePostProcessing;
 
-namespace OnnxModelTester
+namespace OnnxModelTester.Models.Mobilenet
 {
     // See: https://github.com/onnx/models/tree/main/vision/classification/mobilenet
     // Model download: https://github.com/onnx/models/blob/main/vision/classification/mobilenet/model/mobilenetv2-12.onnx

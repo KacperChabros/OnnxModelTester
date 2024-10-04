@@ -1,21 +1,7 @@
-using System.Timers;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Processing;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using Microsoft.ML.OnnxRuntime;
 using AsyncAwaitBestPractices;
-using System.Diagnostics;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Android.Graphics;
-using System.IO;
-using SkiaSharp;
-using AndroidX.ConstraintLayout.Core.Motion.Utils;
-using Android.Renderscripts;
 using OnnxModelTester.Models.RTFormer;
+using System.Diagnostics;
+using System.Timers;
 
 namespace OnnxModelTester
 {

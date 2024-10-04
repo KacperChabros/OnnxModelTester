@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-
-namespace OnnxModelTester
+﻿namespace OnnxModelTester
 {
     public partial class MainPage : ContentPage
     {

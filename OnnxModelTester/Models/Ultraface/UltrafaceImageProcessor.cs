@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using SkiaSharp;
 using OnnxModelTester.PrePostProcessing;
+using SkiaSharp;
 
 namespace OnnxModelTester.Models.Ultraface
 {

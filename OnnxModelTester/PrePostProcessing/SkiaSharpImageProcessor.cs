@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using OnnxModelTester.Models.RTFormer;
 using SkiaSharp;
-using static Android.Icu.Text.ListFormatter;
 
 namespace OnnxModelTester.PrePostProcessing
 {

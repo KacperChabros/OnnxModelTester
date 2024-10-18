@@ -1,5 +1,5 @@
 using AsyncAwaitBestPractices;
-using OnnxModelTester.Models.RTFormer;
+using OnnxModelTester.Models.PaddleSeg;
 using System.Diagnostics;
 using System.Timers;
 
@@ -12,8 +12,8 @@ namespace OnnxModelTester
         private bool _isCapturing = false;
         private int _fps = 2;
 
-        IVisionSample _rtformer;
-        IVisionSample RTFormer => _rtformer ??= new RTFormerSample();
+        IVisionSample _paddleSegModel;
+        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample();
 
         public CameraPage()
         {
@@ -92,7 +92,7 @@ namespace OnnxModelTester
                 var orientedImageBytes = Utils.HandleOrientation(imageBytes);
 
 
-                IVisionSample sample = RTFormer;
+                IVisionSample sample = PaddleSegModel;
                 var result = await sample.ProcessImageAsync(orientedImageBytes);
 
                 stopwatch.Stop();

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Microsoft.ML.OnnxRuntime.Tensors;
-using OnnxModelTester.Models.RTFormer;
+using OnnxModelTester.Models.PaddleSeg;
 using SkiaSharp;
 
 namespace OnnxModelTester.PrePostProcessing
@@ -33,7 +33,7 @@ namespace OnnxModelTester.PrePostProcessing
 
             OnPrepareToApplyPredictions(image, canvas);
 
-            if(predictions is IList<RTFormerPrediction>)
+            if(predictions is IList<PaddleSegPrediction>)
             {
                 foreach (var prediction in predictions)
                 {

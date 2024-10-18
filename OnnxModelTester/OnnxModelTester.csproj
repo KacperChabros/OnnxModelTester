@@ -60,6 +60,7 @@
 	<ItemGroup>
 	  <None Remove="model_rtformer1.onnx" />
 	  <None Remove="Resources\Raw\mobilenetv2-12.onnx" />
+	  <None Remove="Resources\Raw\rtformer_test.onnx" />
 	  <None Remove="Resources\Raw\Ultraface_version-RFB-320.onnx" />
 	</ItemGroup>
 

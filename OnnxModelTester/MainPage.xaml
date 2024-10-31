@@ -7,8 +7,13 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
+            <Picker x:Name="ModelPicker"
+                    Title="Choose the model"
+                    SelectedIndexChanged="OnPickerSelectionChanged" />
+
             <Button Text="Open the camera"
                 Clicked="OnCameraButtonClicked"/>
+            
         </VerticalStackLayout>
     </ScrollView>
 

@@ -1,17 +1,7 @@
-using Android.Graphics;
-using Android.OS;
-using System.Timers;
-using Microsoft.Maui.Controls;
-using Android.Content;
-using Android.Provider;
-using System.IO;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Processing;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using Microsoft.ML.OnnxRuntime;
 using AsyncAwaitBestPractices;
+using OnnxModelTester.Models.PaddleSeg;
+using System.Diagnostics;
+using System.Timers;
 
 namespace OnnxModelTester
 {
@@ -21,10 +11,15 @@ namespace OnnxModelTester
         private bool _isCameraStarted = false;
         private bool _isCapturing = false;
         private int _fps = 2;
+        private string _selectedModel;
 
-        public CameraPage()
+        IVisionSample _paddleSegModel;
+        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample(_selectedModel);
+
+        public CameraPage(string selectedModel)
         {
             InitializeComponent();
+            _selectedModel = selectedModel;
         }
 
         private void cameraView_CamerasLoaded(object sender, EventArgs e)
@@ -39,12 +34,17 @@ namespace OnnxModelTester
             });
         }
 
-
-        private void StartCapturing(object sender, EventArgs e)
+        private async void StartCapturing(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(_selectedModel))
+            {
+                await DisplayAlert("No model selected", "A model needs to be selected in the previous page", "OK");
+                return;
+            }
+
             if (!_isCameraStarted)
             {
-                DisplayAlert("Missing Camera Permission", "The app needs a permission to the camera", "OK");
+                await DisplayAlert("Missing Camera Permission", "The app needs a permission to the camera", "OK");
                 return;
             }
             if (_isCapturing)
@@ -52,7 +52,7 @@ namespace OnnxModelTester
 
             _isCapturing = true;
 
-            _frameCaptureTimer = new System.Timers.Timer(double.Round(1000 / _fps));
+            _frameCaptureTimer = new System.Timers.Timer(double.Round(1000));
             _frameCaptureTimer.Elapsed += CaptureFrame;
             _frameCaptureTimer.Start();
         }
@@ -88,16 +88,31 @@ namespace OnnxModelTester
         private async Task<ImageSource> GetImageAsync()
         {
             var imageSource = cameraView.GetSnapShot(Camera.MAUI.ImageFormat.JPEG);
-
             if (imageSource is StreamImageSource streamImageSource)
             {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                var stream = await streamImageSource.Stream(CancellationToken.None);
+                using MemoryStream ms = new MemoryStream();
+                stream.CopyTo(ms);
+                var imageBytes = ms.ToArray();
+                var orientedImageBytes = Utils.HandleOrientation(imageBytes);
+
+
+                IVisionSample sample = PaddleSegModel;
+                var result = await sample.ProcessImageAsync(orientedImageBytes);
+
+                stopwatch.Stop();
+                Console.WriteLine($"----------------------ELAPSED TIME: {stopwatch.ElapsedMilliseconds} ms--------------------------------");
+                return ImageSource.FromStream(() => new MemoryStream(result.Image));
                 
             }
             else
             {
                 await DisplayAlert("Error", "The ImageSource is not a StreamImageSource", "OK");
             }
-            return imageSource;
+            return null;
         }
     }
 }

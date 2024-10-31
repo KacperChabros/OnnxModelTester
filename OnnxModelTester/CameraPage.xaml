@@ -21,9 +21,9 @@
             </Grid>
 
 
-            <Image x:Name="myImage" WidthRequest="300" HeightRequest="600" />
+            <Image x:Name="myImage" WidthRequest="350" HeightRequest="650" />
             
-            <cv:CameraView x:Name="cameraView" WidthRequest="300" HeightRequest="600" 
+            <cv:CameraView x:Name="cameraView" WidthRequest="350" HeightRequest="650" 
                        CamerasLoaded="cameraView_CamerasLoaded"/>
             
         </VerticalStackLayout>

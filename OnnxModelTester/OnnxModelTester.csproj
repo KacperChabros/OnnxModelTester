@@ -60,7 +60,12 @@
 	<ItemGroup>
 	  <None Remove="model_rtformer1.onnx" />
 	  <None Remove="Resources\Raw\mobilenetv2-12.onnx" />
+	  <None Remove="Resources\Raw\rtformer_1000.onnx" />
+	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_30k.onnx" />
+	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k.onnx" />
+	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k_no_crop.onnx" />
 	  <None Remove="Resources\Raw\rtformer_test.onnx" />
+	  <None Remove="Resources\Raw\rtformer_test2.onnx" />
 	  <None Remove="Resources\Raw\Ultraface_version-RFB-320.onnx" />
 	</ItemGroup>
 

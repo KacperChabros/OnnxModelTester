@@ -11,13 +11,15 @@ namespace OnnxModelTester
         private bool _isCameraStarted = false;
         private bool _isCapturing = false;
         private int _fps = 2;
+        private string _selectedModel;
 
         IVisionSample _paddleSegModel;
-        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample();
+        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample(_selectedModel);
 
-        public CameraPage()
+        public CameraPage(string selectedModel)
         {
             InitializeComponent();
+            _selectedModel = selectedModel;
         }
 
         private void cameraView_CamerasLoaded(object sender, EventArgs e)
@@ -32,11 +34,17 @@ namespace OnnxModelTester
             });
         }
 
-        private void StartCapturing(object sender, EventArgs e)
+        private async void StartCapturing(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(_selectedModel))
+            {
+                await DisplayAlert("No model selected", "A model needs to be selected in the previous page", "OK");
+                return;
+            }
+
             if (!_isCameraStarted)
             {
-                DisplayAlert("Missing Camera Permission", "The app needs a permission to the camera", "OK");
+                await DisplayAlert("Missing Camera Permission", "The app needs a permission to the camera", "OK");
                 return;
             }
             if (_isCapturing)

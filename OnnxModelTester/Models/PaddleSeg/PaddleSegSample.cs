@@ -7,10 +7,10 @@ namespace OnnxModelTester.Models.PaddleSeg
     public class PaddleSegSample : VisionSampleBase<PaddleSegImageProcessor>
     {
         public const string Identifier = "RTFormer";
-        public const string ModelFilename = "rtformer_test.onnx";
+        public readonly string ModelFileName;
 
-        public PaddleSegSample()
-            : base(Identifier, ModelFilename) { }
+        public PaddleSegSample(string modelFilename)
+            : base(Identifier, modelFilename) { ModelFileName = modelFilename; }
 
         protected override async Task<ImageProcessingResult> OnProcessImageAsync(byte[] image)
         {

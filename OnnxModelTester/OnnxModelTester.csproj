@@ -58,9 +58,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_30k.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_visionnavigatorset_1900epoch.onnx" />
+	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_400epoch.onnx" />
 	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k.onnx" />
 	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k_no_crop.onnx" />
+	  <None Remove="Resources\Raw\rtformer_visionnavigatorset_1000epoch.onnx" />
+	  <None Remove="Resources\Raw\rtformer_visionnavigatorset_2000epoch.onnx" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -9,9 +9,12 @@
             InitializeComponent();
             var modelOptions = new List<string> 
             {
-                "rtformer_alteredcityscapes_30k.onnx",
                 "rtformer_alteredcityscapes_80k.onnx",
                 "rtformer_alteredcityscapes_80k_no_crop.onnx",
+                "rtformer_alteredcityscapes_400epoch.onnx",
+                "rtformer_visionnavigatorset_1000epoch.onnx",
+                "rtformer_visionnavigatorset_2000epoch.onnx",
+                "pp_liteseg_visionnavigatorset_1900epoch.onnx"
             };
             ModelPicker.ItemsSource = modelOptions;
         }

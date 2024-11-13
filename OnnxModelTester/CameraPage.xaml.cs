@@ -104,7 +104,7 @@ namespace OnnxModelTester
                 var result = await sample.ProcessImageAsync(orientedImageBytes);
 
                 stopwatch.Stop();
-                Console.WriteLine($"----------------------ELAPSED TIME: {stopwatch.ElapsedMilliseconds} ms--------------------------------");
+                //Console.WriteLine($"----------------------ELAPSED TIME: {stopwatch.ElapsedMilliseconds} ms--------------------------------");
                 return ImageSource.FromStream(() => new MemoryStream(result.Image));
                 
             }

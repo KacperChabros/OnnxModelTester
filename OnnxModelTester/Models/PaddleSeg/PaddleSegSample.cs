@@ -1,6 +1,7 @@
 ﻿using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using OnnxModelTester.PrePostProcessing;
+using System.Diagnostics;
 
 namespace OnnxModelTester.Models.PaddleSeg
 {
@@ -8,7 +9,7 @@ namespace OnnxModelTester.Models.PaddleSeg
     {
         public const string Identifier = "RTFormer";
         public readonly string ModelFileName;
-
+        private Stopwatch _stopWatch;
         public PaddleSegSample(string modelFilename)
             : base(Identifier, modelFilename) { ModelFileName = modelFilename; }
 
@@ -17,7 +18,7 @@ namespace OnnxModelTester.Models.PaddleSeg
             // do initial resize maintaining the aspect ratio so the smallest size is 800. this is arbitrary and 
             // chosen to be a good size to dispay to the user with the results
             using var sourceImage = await Task.Run(() => ImageProcessor.GetImageFromBytes(image, 800f))//check if necessary
-                                              .ConfigureAwait(false);
+                                            .ConfigureAwait(false);
 
             // do the preprocessing to resize the image to the 1024x512 with the model expects. 
             // NOTE: this does not maintain the aspect ratio but works well enough with this particular model.
@@ -34,7 +35,7 @@ namespace OnnxModelTester.Models.PaddleSeg
             // Run the model
             var predictions = await Task.Run(() => GetPredictions(tensor, sourceImage.Width, sourceImage.Height))
                                         .ConfigureAwait(false);
-
+            
             // Draw the bounding box for the best prediction on the image from the first resize. 
             var outputImage = await Task.Run(() => ImageProcessor.ApplyPredictionsToImage(predictions, sourceImage))
                                         .ConfigureAwait(false);

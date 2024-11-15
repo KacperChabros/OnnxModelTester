@@ -59,6 +59,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Raw\pp_liteseg_visionnavigatorset_1900epoch.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_vns_reduced_2300epoch.onnx" />
 	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_400epoch.onnx" />
 	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k.onnx" />
 	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k_no_crop.onnx" />

@@ -12,14 +12,16 @@ namespace OnnxModelTester
         private bool _isCapturing = false;
         private int _fps = 2;
         private string _selectedModel;
+        private IPaddleSegColorMap _colorMap;
 
         IVisionSample _paddleSegModel;
-        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample(_selectedModel);
+        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample(_selectedModel, _colorMap);
 
-        public CameraPage(string selectedModel)
+        public CameraPage(string selectedModel, string selectedColorMap)
         {
             InitializeComponent();
             _selectedModel = selectedModel;
+            _colorMap = ColorMapFactory.CreateColorMap(selectedColorMap);
         }
 
         private void cameraView_CamerasLoaded(object sender, EventArgs e)

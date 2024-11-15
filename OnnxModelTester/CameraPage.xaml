@@ -17,7 +17,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Text="Start Capturing" Grid.Row="0" Grid.Column="0" Clicked="StartCapturing"/>
-                <Button Text="Stop Capturing" Grid.Row="0" Grid.Column="2" Clicked="StopCapturing"/>
+                <Button Text="Stop and Save" Grid.Row="0" Grid.Column="2" Clicked="StopCapturing"/>
             </Grid>
 
 

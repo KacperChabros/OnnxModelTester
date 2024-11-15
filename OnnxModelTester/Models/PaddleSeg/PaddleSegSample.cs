@@ -7,11 +7,16 @@ namespace OnnxModelTester.Models.PaddleSeg
 {
     public class PaddleSegSample : VisionSampleBase<PaddleSegImageProcessor>
     {
-        public const string Identifier = "RTFormer";
+        public const string Identifier = "PaddleSegModel";
         public readonly string ModelFileName;
-        private Stopwatch _stopWatch;
-        public PaddleSegSample(string modelFilename)
-            : base(Identifier, modelFilename) { ModelFileName = modelFilename; }
+        private readonly IPaddleSegColorMap _colorMap;
+        //private Stopwatch _stopWatch;
+        public PaddleSegSample(string modelFilename, IPaddleSegColorMap colorMap)
+            : base(Identifier, modelFilename) 
+        { 
+            ModelFileName = modelFilename; 
+            _colorMap = colorMap;
+        }
 
         protected override async Task<ImageProcessingResult> OnProcessImageAsync(byte[] image)
         {
@@ -55,7 +60,7 @@ namespace OnnxModelTester.Models.PaddleSeg
             var resultsArray = results.ToArray();
             var predictedValues = resultsArray[0].AsEnumerable<int>().ToArray();
             byte[] mask = predictedValues.Select(i => (byte)i).ToArray();
-            var rgbaMask = ConvertGrayscaleToRgba(mask, PaddleSegClassColorMap.ColorMap);
+            var rgbaMask = ConvertGrayscaleToRgba(mask);
 
             return new List<PaddleSegPrediction>()
             {
@@ -66,7 +71,7 @@ namespace OnnxModelTester.Models.PaddleSeg
             };
         }
 
-        private static byte[] ConvertGrayscaleToRgba(byte[] grayscalePixels, Dictionary<byte, byte[]> grayscaleToRgba)
+        private byte[] ConvertGrayscaleToRgba(byte[] grayscalePixels)
         {
             // Make 4 times larger array 
             byte[] rgbaPixels = new byte[grayscalePixels.Length * 4];
@@ -74,7 +79,7 @@ namespace OnnxModelTester.Models.PaddleSeg
             for (int i = 0; i < grayscalePixels.Length; i++)
             {
                 byte grayscaleValue = grayscalePixels[i];
-                byte[] rgbaValue = grayscaleToRgba[grayscaleValue];
+                byte[] rgbaValue = _colorMap.ColorMap[grayscaleValue];
 
                 // assign RGBA value
                 rgbaPixels[i * 4] = rgbaValue[0];     // R

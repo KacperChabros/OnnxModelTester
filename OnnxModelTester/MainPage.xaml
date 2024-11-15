@@ -9,8 +9,12 @@
             Spacing="25">
             <Picker x:Name="ModelPicker"
                     Title="Choose the model"
-                    SelectedIndexChanged="OnPickerSelectionChanged" />
+                    SelectedIndexChanged="OnModelPickerSelectionChanged" />
 
+            <Picker x:Name="ColorMapPicker"
+                Title="Choose dataset variant (number of classes)"
+                SelectedIndexChanged="OnColorMapPickerSelectionChanged" />
+            
             <Button Text="Open the camera"
                 Clicked="OnCameraButtonClicked"/>
             

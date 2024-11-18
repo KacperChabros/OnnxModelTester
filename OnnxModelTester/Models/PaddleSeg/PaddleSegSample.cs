@@ -10,12 +10,13 @@ namespace OnnxModelTester.Models.PaddleSeg
         public const string Identifier = "PaddleSegModel";
         public readonly string ModelFileName;
         private readonly IPaddleSegColorMap _colorMap;
-        //private Stopwatch _stopWatch;
-        public PaddleSegSample(string modelFilename, IPaddleSegColorMap colorMap)
+        public List<long> Predictions;
+        public PaddleSegSample(string modelFilename, IPaddleSegColorMap colorMap, List<long> predictions)
             : base(Identifier, modelFilename) 
         { 
             ModelFileName = modelFilename; 
             _colorMap = colorMap;
+            Predictions = predictions;
         }
 
         protected override async Task<ImageProcessingResult> OnProcessImageAsync(byte[] image)
@@ -53,8 +54,14 @@ namespace OnnxModelTester.Models.PaddleSeg
             // Setup inputs. Names used must match the input names in the model. 
             var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("x", input) };
 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             // Run inference
             using IDisposableReadOnlyCollection<DisposableNamedOnnxValue> results = Session.Run(inputs);
+            stopwatch.Stop();
+            var predictionTime = stopwatch.ElapsedMilliseconds;
+            Predictions.Add(predictionTime);
+
 
             // Handle predictions
             var resultsArray = results.ToArray();

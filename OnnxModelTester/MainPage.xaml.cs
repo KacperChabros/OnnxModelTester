@@ -10,13 +10,12 @@
             InitializeComponent();
             var modelOptions = new List<string> 
             {
-                "rtformer_alteredcityscapes_80k.onnx",
-                "rtformer_alteredcityscapes_80k_no_crop.onnx",
-                "rtformer_alteredcityscapes_400epoch.onnx",
-                "rtformer_visionnavigatorset_1000epoch.onnx",
-                "rtformer_visionnavigatorset_2000epoch.onnx",
-                "pp_liteseg_visionnavigatorset_1900epoch.onnx",
-                "pp_liteseg_vns_reduced_2300epoch.onnx"
+                "pp_liteseg_vnsreduced_corrected_800epoch.onnx",
+                "pp_liteseg_vnsreduced_corrected_800epoch_float16.onnx",
+                "pp_liteseg_visionnavigatorset_1500epoch.onnx",
+                "pp_liteseg_vnsReducedxAlteredScapes_1500epoch.onnx",
+                "mobileseg_vnsReducedxAlteredScapes_1500epoch.onnx",
+                "pp_liteseg_vnsreduced_1500epoch.onnx"
             };
             ModelPicker.ItemsSource = modelOptions;
 
@@ -31,6 +30,16 @@
 
         private async void OnCameraButtonClicked(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(_selectedModel))
+            {
+                await DisplayAlert("No model selected", "A model needs to be selected to proceed", "OK");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(_selectedColorMap))
+            {
+                await DisplayAlert("No color map selected", "A color map needs to be selected to proceed", "OK");
+                return;
+            }
             await Navigation.PushAsync(new CameraPage(_selectedModel, _selectedColorMap));
         }
 

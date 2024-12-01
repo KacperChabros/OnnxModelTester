@@ -58,13 +58,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Raw\pp_liteseg_visionnavigatorset_1900epoch.onnx" />
-	  <None Remove="Resources\Raw\pp_liteseg_vns_reduced_2300epoch.onnx" />
-	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_400epoch.onnx" />
-	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k.onnx" />
-	  <None Remove="Resources\Raw\rtformer_alteredcityscapes_80k_no_crop.onnx" />
-	  <None Remove="Resources\Raw\rtformer_visionnavigatorset_1000epoch.onnx" />
-	  <None Remove="Resources\Raw\rtformer_visionnavigatorset_2000epoch.onnx" />
+	  <None Remove="Resources\Raw\mobileseg_vnsReducedxAlteredScapes_1500epoch.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_visionnavigatorset_1500epoch.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_vnsReducedxAlteredScapes_1500epoch.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_vnsreduced_1500epoch.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_vnsreduced_corrected_800epoch.onnx" />
+	  <None Remove="Resources\Raw\pp_liteseg_vnsreduced_corrected_800epoch_float16.onnx" />
 	</ItemGroup>
 
 	<ItemGroup>

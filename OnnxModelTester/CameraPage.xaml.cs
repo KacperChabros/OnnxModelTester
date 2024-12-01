@@ -2,6 +2,8 @@ using Android.Content;
 using Android.Provider;
 using AsyncAwaitBestPractices;
 using OnnxModelTester.Models.PaddleSeg;
+using OnnxModelTester.Models.PaddleSeg.PaddleSegFloat16;
+using OnnxModelTester.Models.PaddleSeg.PaddleSegFloat32;
 using System.Diagnostics;
 using System.Timers;
 
@@ -12,19 +14,22 @@ namespace OnnxModelTester
         private System.Timers.Timer _frameCaptureTimer;
         private bool _isCameraStarted = false;
         private bool _isCapturing = false;
+        private bool _isUpdatingImage = false;
         private int _fps = 2;
         private string _selectedModel;
         private IPaddleSegColorMap _colorMap;
         public List<long> Predictions = new List<long>();
 
         IVisionSample _paddleSegModel;
-        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSample(_selectedModel, _colorMap, Predictions);
+        IVisionSample PaddleSegModel => _paddleSegModel ??= new PaddleSegSampleFloat32(_selectedModel, _colorMap, Predictions);
 
         public CameraPage(string selectedModel, string selectedColorMap)
         {
             InitializeComponent();
             _selectedModel = selectedModel;
             _colorMap = ColorMapFactory.CreateColorMap(selectedColorMap);
+            if (_selectedModel.Contains("float16"))
+                _paddleSegModel = new PaddleSegSampleFloat16(_selectedModel, _colorMap, Predictions);
         }
 
         private void cameraView_CamerasLoaded(object sender, EventArgs e)
@@ -41,12 +46,6 @@ namespace OnnxModelTester
 
         private async void StartCapturing(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(_selectedModel))
-            {
-                await DisplayAlert("No model selected", "A model needs to be selected in the previous page", "OK");
-                return;
-            }
-
             if (!_isCameraStarted)
             {
                 await DisplayAlert("Missing Camera Permission", "The app needs a permission to the camera", "OK");
@@ -57,7 +56,7 @@ namespace OnnxModelTester
 
             _isCapturing = true;
 
-            _frameCaptureTimer = new System.Timers.Timer(double.Round(1000));
+            _frameCaptureTimer = new System.Timers.Timer(double.Round(1400));
             _frameCaptureTimer.Elapsed += CaptureFrame;
             _frameCaptureTimer.Start();
         }
@@ -72,23 +71,35 @@ namespace OnnxModelTester
 
         private async void CaptureFrame(object sender, ElapsedEventArgs e)
         {
-            if (_isCapturing)
+            if (_isCapturing && !_isUpdatingImage)
             {
                 UpdateImage().SafeFireAndForget();
             }
         }
         private async Task UpdateImage()
         {
-            if (!_isCapturing)
+            if (!_isCapturing || _isUpdatingImage)
             {
                 return;
             }
+            _isUpdatingImage = true;
 
-            var imageSource = await GetImageAsync();
-            MainThread.BeginInvokeOnMainThread(() =>
+            try
             {
-                myImage.Source = imageSource;
-            });
+                var imageSource = await GetImageAsync();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    myImage.Source = imageSource;
+                });
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"{ex}");
+            }
+            finally
+            {
+                _isUpdatingImage = false;
+            }
         }
 
         private async Task<ImageSource> GetImageAsync()

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnnxModelTester.Models.PaddleSeg
+namespace OnnxModelTester.Models.PaddleSeg.PaddleSegColorMaps
 {
     public static class ColorMapFactory
     {

@@ -56,7 +56,7 @@ namespace OnnxModelTester.Models.PaddleSeg.PaddleSegFloat32
             // Create RGBA bitmap in original size
             var rgbaPixels = prediction.Mask;
 
-            SKBitmap bitmap = new SKBitmap(512, 1024, SKColorType.Rgba8888, SKAlphaType.Premul);
+            SKBitmap bitmap = new SKBitmap(RequiredWidth, RequiredHeight, SKColorType.Rgba8888, SKAlphaType.Unpremul);
             nint pixelPointer = bitmap.GetPixels();
             System.Runtime.InteropServices.Marshal.Copy(rgbaPixels, 0, pixelPointer, rgbaPixels.Length);
             SKRect destRect = new SKRect(0, 0, orgImgWidth, orgImgHeight);

@@ -1,7 +1,7 @@
 using Android.Content;
 using Android.Provider;
 using AsyncAwaitBestPractices;
-using OnnxModelTester.Models.PaddleSeg;
+using OnnxModelTester.Models.PaddleSeg.PaddleSegColorMaps;
 using OnnxModelTester.Models.PaddleSeg.PaddleSegFloat16;
 using OnnxModelTester.Models.PaddleSeg.PaddleSegFloat32;
 using System.Diagnostics;

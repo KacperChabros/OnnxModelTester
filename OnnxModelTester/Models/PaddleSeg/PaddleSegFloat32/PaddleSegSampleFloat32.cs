@@ -1,5 +1,6 @@
 ﻿using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using OnnxModelTester.Models.PaddleSeg.PaddleSegColorMaps;
 using OnnxModelTester.PrePostProcessing;
 using System.Diagnostics;
 
